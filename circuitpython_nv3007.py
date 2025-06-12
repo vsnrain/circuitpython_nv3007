@@ -1,0 +1,142 @@
+from fourwire import FourWire
+from busdisplay import BusDisplay
+
+class NV3007(BusDisplay):
+    _INIT_SEQUENCE = (
+        b"\xFF\x01\xA5"      # Unlock
+        b"\x11\x80\x78"      # SLPOUT, Delay 120ms
+        b"\xFF\x01\xA5"      # Unlock
+
+        b"\x9A\x01\x08"      # PWRCTRL12
+        b"\x9B\x01\x08"      # PWRCTRL13
+        b"\x9C\x01\xB0"      # PWRCTRL14
+        b"\x9D\x01\x17"      # PWRCTRL15
+        b"\x9E\x01\xC2"      # PWRCTRL16
+        b"\x8F\x02\x22\x04"  # PWRCTRL1
+
+        # Gamma ldo control
+        b"\x83\x01\x7B"
+        b"\x84\x01\x90"
+        b"\x85\x01\x4F"
+
+        # Gamma control
+        b"\x6E\x01\x0F"
+        b"\x7E\x01\x0F"
+        b"\x60\x01\x00"
+        b"\x70\x01\x00"
+        b"\x6D\x01\x39"
+        b"\x7D\x01\x31"
+        b"\x61\x01\x0A"
+        b"\x71\x01\x0A"
+        b"\x6C\x01\x35"
+        b"\x7C\x01\x29"
+        b"\x62\x01\x0F"
+        b"\x72\x01\x0F"
+        b"\x68\x01\x4F"
+        b"\x78\x01\x45"
+        b"\x66\x01\x33"
+        b"\x76\x01\x33"
+        b"\x6B\x01\x14"
+        b"\x7B\x01\x14"
+        b"\x63\x01\x09"
+        b"\x73\x01\x09"
+        b"\x6A\x01\x13"
+        b"\x7A\x01\x16"
+        b"\x64\x01\x08"
+        b"\x74\x01\x08"
+        b"\x69\x01\x07"
+        b"\x79\x01\x0D"
+        b"\x65\x01\x05"
+        b"\x75\x01\x05"
+        b"\x67\x01\x33"
+        b"\x77\x01\x33"
+        b"\x6F\x01\x00"
+        b"\x7F\x01\x00"
+
+        # Internal timing control
+        b"\x50\x01\x00"
+        b"\x52\x01\xD6"
+        b"\x53\x01\x04"
+        b"\x54\x01\x04"
+        b"\x55\x01\x1B"
+        b"\x56\x01\x1B"
+
+        # GOA control
+        b"\xA0\x03\x2A\x24\x00"
+
+        # GOA VST control
+        b"\xA1\x01\x84"
+        b"\xA2\x01\x85"
+        b"\xA8\x01\x34"
+        b"\xA9\x01\x80"
+        b"\xAA\x01\x73"
+
+        # GOAVEND control
+        b"\xAB\x02\x03\x61"
+        b"\xAC\x02\x03\x65"
+        b"\xAD\x02\x03\x60"
+        b"\xAE\x02\x03\x64"
+        b"\xB0\x04\x3A\x3A\x00\x00"
+
+        # GOACLK control
+        b"\xB6\x01\x32"
+        b"\xB7\x01\x80"
+        b"\xB8\x01\x73"
+        b"\xB9\x01\x82"
+        b"\xBA\x01\x83"
+        b"\xBB\x01\x80"
+        b"\xBC\x01\x81"
+        b"\xBD\x01\x02"
+        b"\xBE\x01\x01"
+        b"\xBF\x01\x04"
+        b"\xC0\x01\x03"
+        b"\xC4\x01\x33"
+        b"\xC5\x01\x80"
+        b"\xC6\x01\x73"
+        b"\xC7\x01\x00"
+        b"\xC8\x02\x33\x33"
+        b"\xC9\x01\x5b"
+        b"\xCA\x01\x5a"
+        b"\xCB\x01\x5d"
+        b"\xCC\x01\x5c"
+        b"\xCD\x02\x33\x33"
+        b"\xCE\x01\x5f"
+        b"\xCF\x01\x5e"
+        b"\xD0\x01\x61"
+        b"\xD1\x01\x60"
+
+        # Source control
+        b"\xE0\x01\x00"
+        b"\xE1\x81\x03\x0F"
+        b"\xE2\x01\x04"
+        b"\xE3\x01\x01"
+        b"\xE4\x01\x0E"
+        b"\xE5\x01\x01"
+        b"\xE6\x01\x19"
+        b"\xE7\x01\x10"
+        b"\xE8\x01\x10"
+        b"\xE9\x01\x21"
+        b"\xEA\x01\x12"
+        b"\xEB\x01\xD0"
+        b"\xEC\x01\x04"
+        b"\xED\x01\x07"
+        b"\xEE\x01\x07"
+        b"\xEF\x01\x09"
+        b"\xF0\x01\xD0"
+        b"\xF1\x01\x0E"
+        b"\xF9\x01\x56"
+        b"\xF2\x04\x26\x1B\x0B\x20"
+
+        b"\x35\x01\x00"      # TEON
+        b"\x44\x02\x00\x10"  # TECTRL1
+        b"\x46\x01\x10"      # TECTRL3
+
+        b"\xFF\x01\x00"      # Lock
+        b"\x3A\x01\x05"      # PFSET: 0x05 = 16-bit/pixel
+        b"\x36\x01\x00"      # MADCTRL
+        b"\x11\x80\xC8"      # SLPOUT, Delay 200ms
+        b"\x29\x80\x96"      # DISPON, Delay 150ms
+    )
+
+    def __init__(self, bus: FourWire, **kwargs: Any):
+        super().__init__(bus, self._INIT_SEQUENCE, **kwargs)
